@@ -16,7 +16,7 @@ public class ControllerClass {
 
     @RequestMapping(value="/messages")
     public Object count() {
-        String sqlRequest = "Select users.id, users.username, users.age, messages.message, messages.timestamp, messages.key, messages.somevalue from users inner join messages on users.id = messages.userid";
+        String sqlRequest = "Select users.id, users.username, users.age, messages.message, messages.timestamp, messages.key from users inner join messages on users.id = messages.userid";
         return jdbcTemplate.queryForList(sqlRequest);
     }
 
