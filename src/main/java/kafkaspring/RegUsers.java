@@ -15,12 +15,16 @@ public class RegUsers implements MessageHandler {
     @Autowired
     ConfigProperties configProperties;
 
+    Person person;
+
     private int personNum = 1;
     private Map<Integer, Person> mapPerson = new TreeMap<>();       // map to collect all messages produced
 
-    Person person;
+    public void setMapPerson(Map<Integer, Person> mapPerson) {
+        this.mapPerson = mapPerson;
+    }
 
-    public synchronized void putMapPerson() throws InterruptedException {
+    public synchronized void fillMapPerson() throws InterruptedException {
         if (mapPerson.size() < configProperties.getNumberRecords())
             mapPerson.put(personNum++, person);
 
@@ -30,7 +34,7 @@ public class RegUsers implements MessageHandler {
         }
     }
 
-    public synchronized void getMapPerson(List<Person> listPerson) throws InterruptedException {
+    public synchronized void copyMapPerson(List<Person> listPerson) throws InterruptedException {
         if (mapPerson.size() == 0) {
             notify();
             wait();
@@ -45,7 +49,7 @@ public class RegUsers implements MessageHandler {
         person = (Person) message.getPayload();
 
         try {
-            putMapPerson();
+            fillMapPerson();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

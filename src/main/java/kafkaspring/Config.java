@@ -74,8 +74,8 @@ public class Config {
     public IntegrationFlow topicFlowPost() {
         return IntegrationFlows
             .from(Http.inboundGateway("/person")
-                .requestPayloadType(Person.class))
-                //.requestMapping(m -> m.methods(HttpMethod.POST)))
+                .requestPayloadType(Person.class)
+                .requestMapping(m -> m.methods(HttpMethod.POST)))
             .handle(Kafka.outboundChannelAdapter(new DefaultKafkaProducerFactory<>(kafkaProperties.buildProducerProperties())).topic(configProperties.getTopicFrom()))
             .get();
     }

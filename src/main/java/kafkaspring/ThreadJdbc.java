@@ -33,7 +33,7 @@ public class ThreadJdbc implements Runnable {
     public void run() {
         while (true) {
             try {
-                regUsers.getMapPerson(listPerson);
+                regUsers.copyMapPerson(listPerson);
                 for (Person person : listPerson) {
                     username = person.getLastName() + " " + person.getFirstName();
                     age = person.getAge();
