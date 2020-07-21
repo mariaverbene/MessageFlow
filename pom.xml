@@ -111,7 +111,7 @@
 <!--                        <auth>-->
 <!--                            <username>mverbene</username>-->
 <!--                            <password></password>-->
-<!--                        </auth>-->
+<!--                        </auth>--> 
                     </to> 
                 </configuration>
             </plugin>
