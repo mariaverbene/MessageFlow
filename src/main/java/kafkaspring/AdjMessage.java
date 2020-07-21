@@ -31,6 +31,6 @@ public class AdjMessage extends MessageProducerSupport implements MessageHandler
         message = MessageBuilder
                 .withPayload(person)
                 .build();
-        sendMessage(message);
+        sendMessage(message); 
     }
 }
