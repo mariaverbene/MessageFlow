@@ -33,19 +33,19 @@ public class ThreadJdbc implements Runnable {
     public void run() {
         while (true) {
             try {
-                regUsers.copyMapPerson(listPerson);
-                for (Person person : listPerson) {
+                regUsers.copyMapPerson(listPerson);     //method from RegUsers to copy values (messages) collected in mapPerson
+                for (Person person : listPerson) {      //iteration of messages
                     username = person.getLastName() + " " + person.getFirstName();
                     age = person.getAge();
                     timestamp = person.getHandledTimestamp();
                     message = person.getText();
                     key = person.getKeyOfMessage();
 
-                    if (jdbcTemplate.queryForObject("select count(*) from users where username = ?", new Object[]{username}, Integer.class) == 0)
-                        jdbcTemplate.update("insert into users values(?,?)", username, age);
+                    if (jdbcTemplate.queryForObject("select count(*) from users where username = ?", new Object[]{username}, Integer.class) == 0)   //checking whether this user already exists in "user" table
+                        jdbcTemplate.update("insert into users values(?,?)", username, age);    //if no such user then put
 
-                    userId = jdbcTemplate.queryForObject("select id from users where username = ?", new Object[]{username}, Integer.class);
-                    jdbcTemplate.update("insert into messages values(?,?,?,?,?)", userId, username, message, timestamp, key);
+                    userId = jdbcTemplate.queryForObject("select id from users where username = ?", new Object[]{username}, Integer.class);     //taking user id from "user" table
+                    jdbcTemplate.update("insert into messages values(?,?,?,?,?)", userId, username, message, timestamp, key);   //adding message in "message" table with userid
                     }
 
                 listPerson.clear();

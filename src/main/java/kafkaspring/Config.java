@@ -44,7 +44,7 @@ public class Config {
     }
 
     @Bean
-    public IntegrationFlow topicFlow() {
+    public IntegrationFlow topicFlow() {    //messages from kafka producer forwarded to publish-subscribe channel with further splitting between registered and non-registered persons
         return IntegrationFlows
                 .from(Kafka.messageDrivenChannelAdapter(new ConcurrentMessageListenerContainer<String, Person>(new DefaultKafkaConsumerFactory<String, Person>(kafkaProperties.buildConsumerProperties(), new StringDeserializer(), new ErrorHandlingDeserializer<>(new JsonDeserializer<>(Person.class))), new ContainerProperties(configProperties.getTopicFrom()))))
                 .handle(adjMessage)
@@ -53,7 +53,7 @@ public class Config {
     }
 
     @Bean
-    public IntegrationFlow topicFlowUnReg() {
+    public IntegrationFlow topicFlowUnReg() {   //proceed messages from unregistered users -> in topic2
         return IntegrationFlows
                 .from(channelPubSub())
                 .handle(unRegUsers)
@@ -62,7 +62,7 @@ public class Config {
     }
 
     @Bean
-    public IntegrationFlow topicFlowReg() {
+    public IntegrationFlow topicFlowReg() {     //proceed messages from registered users -> collection -> database
         return IntegrationFlows
                 .from(channelPubSub())
                 .handle(regUsers)
@@ -70,7 +70,7 @@ public class Config {
     }
 
     @Bean
-    public IntegrationFlow topicFlowPost() {
+    public IntegrationFlow topicFlowPost() {    //messages from POST request
         return IntegrationFlows
             .from(Http.inboundGateway("/person")
                 .requestPayloadType(Person.class)

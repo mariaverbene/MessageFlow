@@ -18,14 +18,12 @@ public class RegUsers implements MessageHandler {
     Person person;
 
     private int personNum = 1;
-    private Map<Integer, Person> mapPerson = new TreeMap<>();       // map to collect all messages produced
+    private Map<Integer, Person> mapPerson = new TreeMap<>();       //map for collecting incoming messages
 
-    public void setMapPerson(Map<Integer, Person> mapPerson) {
-        this.mapPerson = mapPerson;
-    }
+    public void setMapPerson(Map<Integer, Person> mapPerson) { this.mapPerson = mapPerson; }   //for testing purposes
 
-    public synchronized void fillMapPerson() throws InterruptedException {
-        if (mapPerson.size() < configProperties.getNumberRecords())
+    public synchronized void fillMapPerson() throws InterruptedException {  //fill mapPerson
+        if (mapPerson.size() < configProperties.getNumberRecords())     //configProperties.getNumberRecords() - maximum number of collected messages
             mapPerson.put(personNum++, person);
 
         if (mapPerson.size() == configProperties.getNumberRecords()) {
@@ -34,7 +32,7 @@ public class RegUsers implements MessageHandler {
         }
     }
 
-    public synchronized void copyMapPerson(List<Person> listPerson) throws InterruptedException {
+    public synchronized void copyMapPerson(List<Person> listPerson) throws InterruptedException {   //copy values from mapPerson to database (in ThreadJdbc)
         if (mapPerson.size() == 0) {
             notify();
             wait();

@@ -18,7 +18,7 @@ public class UnregUsers extends MessageProducerSupport implements MessageHandler
 
         person = (Person) message.getPayload();
 
-        if (person.getRegistered().equals("no")) {
+        if (person.getRegistered().equals("no")) {      //checking whether user is 'registered'
 
             message = MessageBuilder
                     .withPayload(person)

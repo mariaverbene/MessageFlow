@@ -18,15 +18,15 @@ public class AdjMessage extends MessageProducerSupport implements MessageHandler
     public void handleMessage(Message message) throws MessagingException {
         System.out.println(">>>>got new message");
 
-        person = (Person) message.getPayload();
-        person.setHandledTimestamp(System.currentTimeMillis());
+        person = (Person) message.getPayload(); //deserialization
+        person.setHandledTimestamp(System.currentTimeMillis()); //setting timestamp = current time
 
-        keyOfMessage = (String) message.getHeaders().get(KafkaHeaders.RECEIVED_MESSAGE_KEY);
+        keyOfMessage = (String) message.getHeaders().get(KafkaHeaders.RECEIVED_MESSAGE_KEY);    //getting key of kafka-message
 
         if (!(keyOfMessage == null))
             person.setKeyOfMessage(keyOfMessage);
         else
-            person.setKeyOfMessage("-");
+            person.setKeyOfMessage("-");    //messages from POST request do not have keys
 
         message = MessageBuilder
                 .withPayload(person)
