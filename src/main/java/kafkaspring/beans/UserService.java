@@ -4,8 +4,6 @@ import kafkaspring.model.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
