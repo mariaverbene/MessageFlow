@@ -1,6 +1,7 @@
 package kafkaspring.beans;
 
 import kafkaspring.model.Person;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 import javax.annotation.PreDestroy;
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class ThreadJdbc implements Runnable {
                 }
                 listPerson.clear();
                 }
-            catch (RuntimeException | InterruptedException e) {
+            catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }

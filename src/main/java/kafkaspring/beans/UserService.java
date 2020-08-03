@@ -2,6 +2,7 @@ package kafkaspring.beans;
 
 import kafkaspring.model.Person;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import java.util.ArrayList;
@@ -16,18 +17,21 @@ import java.util.logging.Logger;
 @Component
 public class UserService {
 
-    @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    UserService(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
     private ArrayList<Person> messagesLost= new ArrayList<>();
-    Logger log = Logger.getLogger(UserService.class.getName());
+    private Logger log = Logger.getLogger(UserService.class.getName());
 
     public void createTables() {
         try {
-            jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS users (username text, age integer, id serial primary key)");
-            jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS messages (userid integer references users (id), username text, message text, timestamp bigint, key text, id serial primary key)");
+            jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS users (username varchar(30), age integer, id serial primary key)");
+            jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS messages (userid integer references users (id), username varchar(30), message varchar(255), timestamp bigint, key varchar(10), id serial primary key)");
         }
-        catch (Exception e) {
+        catch (DataAccessException e) {
             log.info(">>>>>>>>>>Problems with posting data to database tables");
         }
     }
@@ -49,7 +53,7 @@ public class UserService {
 
             log.info(">>>>>>>>>>Message " + person.toString() + " posted to database");
         }
-        catch (Exception e) {
+        catch (DataAccessException e) {
             messagesLost.add(person);
             log.info(">>>>>>>>>>Problems with posting data to database tables, message " + person.toString() + " saved, number of saved messages = " + messagesLost.size());
         }
@@ -60,7 +64,7 @@ public class UserService {
             String sqlRequest = "Select users.id, users.username, users.age, messages.message, messages.timestamp, messages.key from users inner join messages on users.id = messages.userid";
             return jdbcTemplate.queryForList(sqlRequest);
         }
-        catch (Exception e) {
+        catch (DataAccessException e) {
             log.info(">>>>>>>>>>Not possible to show requested data - problems with accessing database tables");
             return null;
         }

@@ -1,43 +1,51 @@
 package kafkaspring.beans;
 
 import junit.framework.TestCase;
+import kafkaspring.config.ConfigProperties;
 import kafkaspring.model.Person;
 import org.junit.Test;
-
+import org.springframework.test.util.ReflectionTestUtils;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class RegUsersTest extends TestCase {
 
     @Test
-    public void testCopyMapPerson() throws InterruptedException {
-        Map<Integer, Person> mapPerson = new TreeMap<>();
-        Map<Integer, Person> mapPersonInitial = new TreeMap<>();
-        ArrayList<Person> listPerson = new ArrayList<>();
-
-        Person person1 = new Person();
-        Person person2 = new Person();
-        Person person3 = new Person();
+    public void testCopyFillMapMethods() throws InterruptedException {
 
         RegUsers regUsers = new RegUsers();
+        ConfigProperties configProperties = new ConfigProperties();
 
-        person1.setLastName("Ivanov");
-        person2.setLastName("Petrov");
-        person3.setLastName("Sidorov");
+        ArrayList testListPerson = new ArrayList<Person>();
+        ArrayList listCopy = new ArrayList<Person>();
 
-        mapPerson.put(1, person1);
-        mapPerson.put(2, person2);
-        mapPerson.put(3, person3);
+        ReflectionTestUtils.setField(configProperties, "numberRecords", 10);
 
-        mapPersonInitial.putAll(mapPerson);
+        ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
+        service.scheduleWithFixedDelay(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    regUsers.copyMapPerson(testListPerson);
+                }
+                catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }}, 0, 1, TimeUnit.SECONDS);
 
-        regUsers.setMapPerson(mapPerson);
-        regUsers.copyMapPerson(listPerson);
+        for (int i=1; i<=configProperties.getNumberRecords(); i++) {
+            Person person = new Person();
+            person.setAge(30+i);
 
-        assertEquals("[]", mapPerson.values().toString());
-        assertEquals(mapPersonInitial.values().toString(), listPerson.toString());
-
+            listCopy.add(person);
+            regUsers.fillMapPerson(person, configProperties.getNumberRecords());
         }
 
+        assertEquals("[]", regUsers.getMapPerson().values().toString());
+        assertEquals(configProperties.getNumberRecords(), testListPerson.size());
+        assertEquals(listCopy, testListPerson);
     }
+
+}

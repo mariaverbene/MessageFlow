@@ -4,9 +4,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
- topicFrom - topic1
- topicTo - topic2
- numberRecords - number of messages collected in mapPerson before sending to database
+ topicFrom = topic1
+ topicTo = topic2
+ numberRecords = number of messages collected in mapPerson before sending to database
  **/
 
 @Component

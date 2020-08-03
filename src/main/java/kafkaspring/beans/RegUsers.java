@@ -28,18 +28,21 @@ public class RegUsers implements MessageHandler {
 
     private int personNum = 1;
     private Map<Integer, Person> mapPerson = new TreeMap<>();
-    Logger log = Logger.getLogger(RegUsers.class.getName());
+    private Logger log = Logger.getLogger(RegUsers.class.getName());
 
     public void setMapPerson(Map<Integer, Person> mapPerson) {
         this.mapPerson = mapPerson;
     }
+    public Map<Integer, Person> getMapPerson() {
+        return mapPerson;
+    }
 
-    public synchronized void fillMapPerson(Person person) throws InterruptedException {
-        if (mapPerson.size() < configProperties.getNumberRecords()) {
+    public synchronized void fillMapPerson(Person person, int amountFinal) throws InterruptedException {
+        if (mapPerson.size() < amountFinal) {
             mapPerson.put(personNum++, person);
         }
 
-        if (mapPerson.size() == configProperties.getNumberRecords()) {
+        if (mapPerson.size() == amountFinal) {
             notify();
             wait();
         }
@@ -63,7 +66,7 @@ public class RegUsers implements MessageHandler {
         try {
             if (!registered.equals("no")) {
                 log.info(">>>>>>>>>>Message " + personNum + " from registered user: " + person.toString() + " forwarded to database");
-                fillMapPerson(person);
+                fillMapPerson(person, configProperties.getNumberRecords());
             }
         }
         catch (InterruptedException e) {
