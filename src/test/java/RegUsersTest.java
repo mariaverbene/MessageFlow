@@ -1,6 +1,5 @@
-package kafkaspring.beans;
-
 import junit.framework.TestCase;
+import kafkaspring.beans.RegUsers;
 import kafkaspring.config.ConfigProperties;
 import kafkaspring.model.Person;
 import org.junit.Test;
