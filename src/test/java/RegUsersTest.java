@@ -20,6 +20,8 @@ public class RegUsersTest extends TestCase {
         ArrayList testListPerson = new ArrayList<Person>();
         ArrayList listCopy = new ArrayList<Person>();
 
+        System.out.println(configProperties.getNumberRecords());
+
         ReflectionTestUtils.setField(configProperties, "numberRecords", 10);
 
         ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
